@@ -1,0 +1,70 @@
+* {
+  box-sizing: border-box;
+  font-family: system-ui, Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif,  sans-serif;
+  background-color: #f0f9fe;
+  color: #011421;;
+}
+
+.header {
+  height: 100px;
+  width: 100%;
+  background-color: #f0f9fe;
+  padding: 24px;
+}
+
+.group-name {
+  font-size: 16px;
+  font-weight: 500;
+  background-color: #f98c81;
+  padding: 12px;
+  max-width: fit-content;
+  border-radius: 6px;
+  color: #011421;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  max-height: none;
+  padding: 0px;
+  background-color: #f0f9fe;
+}
+
+.app-title {
+  margin: 0;
+  padding: auto;
+  font-size: 48px;
+  text-align: center;
+}
+
+.app-subtitle {
+  margin: 0;
+  padding: 24px 0 12px 0;
+  font-size: 24px;
+  text-align: center;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.results-title {
+  font-size: 20px;
+  text-align: center;
+  background-color: #AAD464;
+  padding: 12px 12px;
+  max-width: fit-content;
+  border-radius: 6px;
+  color: #011421;
+}
+
+/* Color Pallete 
+--text: #011421;
+--background: #f0f9fe;
+--primary: #18a4f5;
+--secondary: #f98c81;
+--accent: #aad464;
+*/
+

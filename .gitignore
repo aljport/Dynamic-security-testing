@@ -1,2 +1,50 @@
 # Virtual env
-.venv/
+venv/
+env/
+ENV/
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.Python
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+*.log
+local_settings.py
+media/
+staticfiles/
+DAST/backend/db.sqlite3
+
+# Environment variables
+.env
+.env.local
+
+# React/Node
+DAST/frontend/node_modules/
+DAST/frontend/dist/
+DAST/frontend/.vite/
+DAST/frontend/coverage/
+DAST/frontend/.env.local
+DAST/frontend/.env.development.local
+DAST/frontend/.env.test.local
+DAST/frontend/.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
