@@ -9,11 +9,12 @@
 
 .url-input {
   flex: 1 1 1200px;
-  padding: 0.65rem 0.75rem;
-  border-radius: 6px;
+  padding: 0.75rem 0.75rem;
+  border-radius: 12px;
   font-size: 14px;
-  border: 1px solid #011421;
-  background-color: #f0f9fe;
+  border: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   color: #011421;
   margin: 24px;
   margin-left: 20%;
@@ -39,10 +40,12 @@
   cursor: pointer;
   margin: 24px 0;
   margin-right: 20%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .scan-button:hover {
-  background-color: #1094d1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Color Pallete 

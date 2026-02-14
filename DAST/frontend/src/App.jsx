@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import './App.css'
 import UrlInputForm from './components/URL_InputForm.jsx'
+import Results from './components/Results.jsx'
+import SecurityTests from './components/SecurityTestsInfo.jsx'
 
 function App() {
   return (
@@ -10,12 +12,11 @@ function App() {
       </div>
       <div className='app-container'>
         <h1 className='app-title'>Dynamic Security Testing Tool</h1>
-        <p className='app-subtitle'>Enter a URL below to start a security scan:</p>
+        <p className='app-subtitle'>This tool use 4 tests to scan websites for different types of vulnerabilities</p>
+        <p className='app-instructions'>Enter a URL below to start a security scan:</p>
         <UrlInputForm/>
-        {/* TODO: Create results component with invalid url feedback */}
-        <div className='results'>
-          <p className='results-title'>Results</p>
-        </div>
+        <Results/>
+        <SecurityTests/>
       </div>
     </>
   )
