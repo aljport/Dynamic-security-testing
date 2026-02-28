@@ -7,8 +7,8 @@ import SecurityTests from './components/SecurityTestsInfo.jsx'
 function App() {
   return (
     <>
-    <div className='header'>
-      <p className='group-name'>Team SAAB</p>
+      <div className='header'>
+        <p className='group-name'>Team SAAB</p>
       </div>
       <div className='app-container'>
         <h1 className='app-title'>Dynamic Security Testing Tool</h1>
