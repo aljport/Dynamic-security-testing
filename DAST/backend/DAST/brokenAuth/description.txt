@@ -1,0 +1,18 @@
+Limit attempts
+Check account lockout
+Check for error message differences
+Try to bypass authentication with URL
+Remove cookies
+Modify headers
+Change from post get
+Session cookie predictability
+Session cookies stays the same
+Session cookie resources
+Check flags HttpOnly, Secure, SameSite
+Session timeout length
+Reuse password reset link
+Change email in reset request
+Check MFA rate Limit
+Skip OTP
+Reuse OTP
+Modify parameters

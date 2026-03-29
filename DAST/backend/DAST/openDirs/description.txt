@@ -1,0 +1,3 @@
+To find open directories most DASTs:
+Look through search engine records under a give domain.
+You can do this through APIs the browsers provide.
