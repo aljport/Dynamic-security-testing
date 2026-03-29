@@ -1,5 +1,6 @@
-import React from 'react';
+import {React, useState, useEffect} from 'react';
 import './Results.css';
+import AxiosInstance from '../utils/Axios';
 
 const Results = () => {
   return (

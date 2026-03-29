@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"
 import "./URL_InputForm.css";
 
 function ErrorMessage({ isValid }) {
@@ -9,10 +10,10 @@ function ErrorMessage({ isValid }) {
   );
 }
 
-
 function UrlInputForm() {
   const [url, setUrl] = useState("");
   const [isValid, setIsValid] = useState(true);
+  const navigate = useNavigate();
 
   //Different URL types (.gov, .edu, .org, etc.) supported but not tested
 
@@ -23,11 +24,13 @@ function UrlInputForm() {
 
     setIsValid(isURLValid);
 
-    console.log("Is valid: ", isURLValid);
+    console.log("URL: ", url);
 
     if (isURLValid) {
       console.log("Valid URL Submitted: " + url);
       //Send URL to backend
+
+      navigate('/results/1')
     } else {
       console.warn("Invalid URL");
     }

@@ -1,50 +1,30 @@
-# Virtual env
-venv/
-env/
-ENV/
-
 # Python
+venv/
+__pycache__/
 *.pyc
 *.pyo
 *.pyd
-__pycache__/
-*.so
-*.egg
+.Python
 *.egg-info/
 dist/
 build/
-.Python
 
 # Django
-db.sqlite3
-db.sqlite3-journal
+*.sqlite3
 *.log
-local_settings.py
 media/
 staticfiles/
-DAST/backend/db.sqlite3
 
 # Environment variables
 .env
-.env.local
+.env.*
+!.env.example
 
-# React/Node
-DAST/frontend/node_modules/
-DAST/frontend/dist/
-DAST/frontend/.vite/
-DAST/frontend/coverage/
-DAST/frontend/.env.local
-DAST/frontend/.env.development.local
-DAST/frontend/.env.test.local
-DAST/frontend/.env.production.local
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
+# macOS
 .DS_Store
-Thumbs.db
+
+# VS Code
+.vscode/
+
+# Node (frontend handled by frontend/.gitignore, but just in case)
+node_modules/

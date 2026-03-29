@@ -2,7 +2,12 @@
   display: flex;
   flex-flow: column wrap;
   align-items: center;
+}
 
+.url-form {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
 }
 
 .url-input {
@@ -26,6 +31,10 @@
   outline: none;
 }
 
+.url-input.invalid {
+  border-color: #f98c81;
+}
+
 .scan-button {
   padding: 12px;
   border-radius: 6px;
@@ -44,22 +53,16 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-
 .error-text {
   width: 685px;
   color: #ef4444;
   font-size: 14px;
   padding-left: 12px;
   margin-top: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   font-weight: 400;
 }
 
-
-/* Optional: Add red border to input when invalid */
-.url-input.invalid {
-  border-color: #f98c81;
-}
 
 /* Color Pallete 
 --text: #011421;
