@@ -1,0 +1,1 @@
+To find cross site scripting (XSS) vulnerabilities this python scrip takes in a website, parses it, and injects various payloads with different encodings. It is then evaluated through reflected payloads and gives detail about where the possible error could be. 
