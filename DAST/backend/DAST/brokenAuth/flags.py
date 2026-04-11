@@ -1,5 +1,4 @@
 import requests
-
 r = requests.get("https://example.com")
 
 for cookie in r.cookies:
