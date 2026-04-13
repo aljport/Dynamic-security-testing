@@ -1,8 +1,6 @@
 #XSS BACKEND
 #TO CALL USE:   scan_xss(website)
 
-
-
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
@@ -108,7 +106,21 @@ def scan_xss(url):
         print(f"Type       : {vector}")
         print(f"Method     : {method}")
         print(f"Detail     : {description}")
+
+        return {
+            "vulnerable": True,
+            "type": vector,
+            "method": method,
+            "detail": description
+        }
+    
     else:
         print(f"XSS Vulnerability : NO")
         print(f"Detail     : No XSS patterns detected")
-    print()
+
+        return {
+            "vulnerable": False,
+            "type": None,
+            "method": None,
+            "detail": "No XSS patterns detected"
+        }

@@ -6,12 +6,10 @@ import re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse, parse_qs
 
-MAX_PAGES = 10
-CONCURRENT_REQUESTS = 3
+MAX_PAGES = 5
+CONCURRENT_REQUESTS = 2
 TIME_THRESHOLD = 3
 SIMILARITY_THRESHOLD = 0.85
-
-semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
 
 ERROR_PAYLOADS = ["'", "\"", "' OR '1'='1", "' OR 1=1 --"]
 BOOLEAN_PAYLOADS = [("' OR 1=1 --", "' OR 1=2 --")]
@@ -50,7 +48,7 @@ def contains_sql_error(text):
     return any(err in text for err in SQL_ERRORS)
 
 
-async def request(session, url, method="get", params=None, data=None):
+async def request(session, url, semaphore, method="get", params=None, data=None):
     async with semaphore:
         try:
             await asyncio.sleep(0.2)
@@ -69,12 +67,12 @@ async def request(session, url, method="get", params=None, data=None):
             return "", 0
 
 
-async def stable_request(session, url, method="get", params=None, data=None, repeats=3):
+async def stable_request(session, url, semaphore, method="get", params=None, data=None, repeats=3):
     responses = []
     times = []
 
     for _ in range(repeats):
-        text, t = await request(session, url, method, params, data)
+        text, t = await request(session, url, semaphore, method, params, data)
         responses.append(text)
         times.append(t)
 
@@ -103,7 +101,7 @@ def extract_links(base_url, html):
     return links
 
 
-async def crawl(session, start_url):
+async def crawl(session, start_url, semaphore):
     visited = set()
     queue = [start_url]
     base = normalize_netloc(start_url)
@@ -114,7 +112,7 @@ async def crawl(session, start_url):
         if url in visited:
             continue
 
-        html, _ = await request(session, url)
+        html, _ = await request(session, url, semaphore)
         visited.add(url)
 
         for link in extract_links(url, html):
@@ -126,16 +124,16 @@ async def crawl(session, start_url):
 
 # ---------------- SQL TESTING ---------------- #
 
-async def test_param(session, url, param, params, results):
+async def test_param(session, url, param, params, semaphore, results):
 
-    baseline, base_time = await stable_request(session, url, params=params)
+    baseline, base_time = await stable_request(session, url, semaphore, params=params)
 
     # ---------- ERROR BASED ----------
     for payload in ERROR_PAYLOADS:
         test = dict(params)
         test[param] = payload
 
-        resp, _ = await request(session, url, params=test)
+        resp, _ = await request(session, url, semaphore, params=test)
 
         if contains_sql_error(resp):
             results.append({
@@ -153,8 +151,8 @@ async def test_param(session, url, param, params, results):
         t_params[param] = true_p
         f_params[param] = false_p
 
-        true_resp, _ = await stable_request(session, url, params=t_params)
-        false_resp, _ = await stable_request(session, url, params=f_params)
+        true_resp, _ = await stable_request(session, url, semaphore, params=t_params)
+        false_resp, _ = await stable_request(session, url, semaphore, params=f_params)
 
         sim_tf = similarity(true_resp, false_resp)
         sim_tb = similarity(true_resp, baseline)
@@ -174,7 +172,7 @@ async def test_param(session, url, param, params, results):
         test = dict(params)
         test[param] = payload
 
-        resp, _ = await request(session, url, params=test)
+        resp, _ = await request(session, url, semaphore, params=test)
 
         if similarity(resp, baseline) < SIMILARITY_THRESHOLD:
             results.append({
@@ -189,7 +187,7 @@ async def test_param(session, url, param, params, results):
         test = dict(params)
         test[param] = payload
 
-        _, duration = await request(session, url, params=test)
+        _, duration = await request(session, url, semaphore, params=test)
 
         if duration - base_time > TIME_THRESHOLD:
             results.append({
@@ -201,7 +199,7 @@ async def test_param(session, url, param, params, results):
             })
 
 
-async def scan_url_params(session, url, results):
+async def scan_url_params(session, url, semaphore, results):
     parsed = urlparse(url)
     params = parse_qs(parsed.query)
 
@@ -212,7 +210,7 @@ async def scan_url_params(session, url, results):
 
     tasks = []
     for param in flat:
-        tasks.append(test_param(session, url, param, flat, results))
+        tasks.append(test_param(session, url, param, flat, semaphore, results))
 
     await asyncio.gather(*tasks)
 
@@ -236,8 +234,8 @@ def get_form_details(form):
     return action, method, inputs
 
 
-async def scan_forms(session, url, results):
-    html, _ = await request(session, url)
+async def scan_forms(session, url, semaphore, results):
+    html, _ = await request(session, url, semaphore)
     forms = extract_forms(html)
 
     for form in forms:
@@ -248,15 +246,15 @@ async def scan_forms(session, url, results):
             continue
 
         data = {i: "test" for i in inputs}
-        baseline, _ = await stable_request(session, target, method, data=data)
+        baseline, _ = await stable_request(session, target, semaphore, method, data=data)
 
         for payload in ERROR_PAYLOADS:
             test_data = {i: payload for i in inputs}
 
             if method == "post":
-                resp, _ = await request(session, target, method="post", data=test_data)
+                resp, _ = await request(session, target, semaphore, method="post", data=test_data)
             else:
-                resp, _ = await request(session, target, params=test_data)
+                resp, _ = await request(session, target, semaphore, params=test_data)
 
             if contains_sql_error(resp) or similarity(resp, baseline) < SIMILARITY_THRESHOLD:
                 results.append({
@@ -286,20 +284,61 @@ def deduplicate(results):
 async def scan(start_url):
     results = []
 
+    semaphore = asyncio.Semaphore(CONCURRENT_REQUESTS)
+
     headers = {"User-Agent": "AdvancedSQLiScanner"}
     connector = aiohttp.TCPConnector(ssl=False)
 
     async with aiohttp.ClientSession(headers=headers, connector=connector) as session:
-        pages = await crawl(session, start_url)
+        pages = await crawl(session, start_url, semaphore)
 
         tasks = []
         for page in pages:
-            tasks.append(scan_url_params(session, page, results))
-            tasks.append(scan_forms(session, page, results))
+            tasks.append(scan_url_params(session, page, semaphore, results))
+            tasks.append(scan_forms(session, page, semaphore, results))
 
         await asyncio.gather(*tasks)
 
     return deduplicate(results)
+
+def scan_sql_injection(url):
+    findings = asyncio.run(scan(url))
+
+    print("\nSQL Injection Scan Results")
+    print("=" * 60)
+
+    if findings:
+        for i, f in enumerate(findings, 1):
+            print(f"\n[{i}] {f['type']}")
+            print(f"URL: {f['url']}")
+
+            if "parameter" in f:
+                print(f"Parameter: {f['parameter']}")
+
+            if "payload" in f:
+                print(f"Payload: {f['payload']}")
+
+            if "similarity" in f:
+                print(f"Similarity: {f['similarity']}")
+
+            if "delay" in f:
+                print(f"Delay: {f['delay']}s")
+        return {
+                "vulnerable": True,
+                "findings_count": len(findings),
+                "findings": findings,
+                "detail": f"Found {len(findings)} potential SQL injection point(s)"
+            }
+    else:
+        print("\nNo SQL injection indicators detected.")
+
+        return {
+                "vulnerable": False,
+                "findings_count": 0,
+                "findings": [],
+                "detail": "No SQL injection indicators detected"
+            }
+
 
 
 if __name__ == "__main__":

@@ -1,17 +1,371 @@
+* {
+  box-sizing: border-box;
+}
+
+.results-page {
+  min-height: 100vh;
+  background-color: #f0f9fe;
+  padding: 20px;
+}
+
+.results-header-section {
+  max-width: 800px;
+  margin: 0 auto 20px;
+}
+
 .back-button {
+  background-color: #d1d1d1;
+  border: none;
   padding: 10px 20px;
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  background-color: #ffffff;
-  color: #011421;
+  cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  cursor: pointer;
-  margin: 20px 0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: #333;
+  transition: background-color 0.2s;
+  transition: transform 0.2s;
 }
 
 .back-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #c0c0c0;
+}
+
+.results-container {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Title Card */
+.results-title-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.results-title-card h1 {
+  margin: 0 0 10px 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  background-color: transparent !important;
+}
+
+.scanned-url-text {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  background-color: transparent !important;
+}
+
+/* Status Icon */
+.status-icon-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  background-color: transparent !important;
+}
+
+.status-icon-placeholder {
+  width: 120px;
+  height: 120px;
+  background-color: #d1d1d1 !important;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+}
+
+/* Vulnerabilities Found Card */
+.vulnerabilities-found-card {
+  background-color: #ffffff !important;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vulnerabilities-found-card h2 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  background-color: transparent !important;
+}
+
+.vulnerability-badges {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  background-color: transparent !important;
+}
+
+.vulnerability-badge {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: default;
+  transition: transform 0.2s;
+}
+
+.none-badge {
+  background-color: #4ade80 !important;
+  color: white;
+}
+
+.threat-badge {
+  background-color: #ff6b4a !important;
+  color: white;
+}
+
+.vulnerability-badge:hover {
+  transform: translateY(-2px);
+}
+
+/* Vulnerability Detail Cards */
+.vulnerability-detail-card {
+  background-color: #ffffff !important;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.vulnerability-detail-card h2 {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  background-color: transparent !important;
+}
+
+.vulnerability-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: transparent !important;
+}
+
+.vuln-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background-color: transparent !important;
+}
+
+.vuln-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 80px;
+  background-color: transparent !important;
+}
+
+.vuln-value {
+  color: #666;
+  flex: 1;
+  background-color: transparent !important;
+}
+
+.vulnerable-text {
+  color: #ff6b4a;
+  font-weight: 600;
+  background-color: transparent !important;
+}
+
+.safe-text {
+  color: #4ade80;
+  font-weight: 600;
+  background-color: transparent !important;
+}
+
+/* Findings Section */
+.findings-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+  background-color: transparent !important;
+}
+
+.finding-detail {
+  background-color: #f9f9f9 !important;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  border-left: 3px solid #ff6b4a;
+}
+
+.finding-detail p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+  background-color: transparent !important;
+}
+
+.finding-detail strong {
+  background-color: transparent !important;
+}
+
+.finding-detail code {
+  background-color: #e5e5e5 !important;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 13px;
+}
+
+.more-findings {
+  color: #ff6b4a;
+  font-weight: 600;
+  margin-top: 10px;
+  font-size: 14px;
+  background-color: transparent !important;
+}
+
+/* Error Message */
+.error-message {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #ffffff !important;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 100px auto;
+}
+
+.error-message h1 {
+  color: #f44336;
+  margin-bottom: 16px;
+  background-color: transparent !important;
+}
+
+.error-message p {
+  background-color: transparent !important;
+}
+
+.error-message button {
+  margin-top: 20px;
+  background-color: #2196F3 !important;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.error-message button:hover {
+  background-color: #1976D2 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .results-page {
+    padding: 10px;
+  }
+
+  .results-container {
+    gap: 15px;
+  }
+
+  .results-title-card,
+  .vulnerabilities-found-card,
+  .vulnerability-detail-card {
+    padding: 20px;
+  }
+
+  .results-title-card h1 {
+    font-size: 24px;
+  }
+
+  .vulnerability-badges {
+    gap: 10px;
+  }
+
+  .vulnerability-badge {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  .status-icon-placeholder {
+    width: 100px;
+    height: 100px;
+    font-size: 50px;
+  }
+}
+
+.show-more-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px 20px;
+  background-color: #f0f0f0 !important;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ff6b4a;
+  transition: all 0.3s ease;
+}
+
+.show-more-button:hover {
+  background-color: #e5e5e5 !important;
+  border-color: #ff6b4a;
+}
+
+.show-more-button span {
+  background-color: transparent !important;
+}
+
+.arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+  display: inline-block;
+  background-color: transparent !important;
+}
+
+.findings-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+  background-color: transparent !important;
+}
+
+.finding-detail {
+  background-color: #f9f9f9 !important;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  border-left: 3px solid #ff6b4a;
+  animation: slideIn 0.3s ease;
+}
+
+.finding-detail p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+  background-color: transparent !important;
+}
+
+.finding-detail strong {
+  background-color: transparent !important;
+  color: #333;
+}
+
+.finding-detail code {
+  background-color: #e5e5e5 !important;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 13px;
+  color: #d32f2f;
 }
