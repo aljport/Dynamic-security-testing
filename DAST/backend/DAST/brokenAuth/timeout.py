@@ -1,23 +1,25 @@
 import time
 import requests
-import hashlib
 
-session = requests.Session()
+# code403 = "unauthorized"
+# If timeout occurs another code will be returned
+# Link must be a login URL
+# Sample URL = "https://vsco.co/user/login"
 
-code403 = "unauthorized"
-url = "https://vsco.co/user/login"
+def checkRateLimit(url):
+    session = requests.Session()
 
-def hash_html(text):
-    return hashlib.sha256(text.encode()).hexdigest()
+    # Login attempt
+    payload = {
+        "username": "test",
+        "password": "wrongpassword"
+    }
 
-# Login attempt
-payload = {
-    "username": "test",
-    "password": "wrongpassword"
-}
-
-for i in range(11):
-    login_response = session.post(url, data=payload)
-    if (login_response.status_code != 403):
-        print("Login timeouts should occur after 10 attempts.")
-    time.sleep(4)
+    for i in range(11):
+        login_response = session.post(url, data=payload)
+        if login_response.status_code != 403 and i < 11:
+            print("Successful login timeout (within 10 attempts).")
+            break
+        time.sleep(4)
+    else:
+        print("Vulnerability: No login timeout within 10 attempts.")
