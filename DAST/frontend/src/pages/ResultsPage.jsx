@@ -24,6 +24,7 @@ function ResultsPage() {
   const sqlFindings = vulnerabilities.sql_injection.findings || [];
   const hasMoreFindings = sqlFindings.length > 3;
   const displayedFindings = showAllFindings ? sqlFindings : sqlFindings.slice(0, 3);
+  const cookies = vulnerabilities.broken_authentication.cookies
 
   return (
     <div className="results-page">
@@ -153,6 +154,41 @@ function ResultsPage() {
             )}
           </div>
         </div>
+
+        {/* Broken Authentication Section */}
+        <div className="vulnerability-detail-card">
+          <h2>Broken Authentication</h2>
+          <div className="vulnerability-content">
+            {vulnerabilities.sql_injection.vulnerable ? (
+              <>
+                <div className="vuln-info-row">
+                  <span className="vuln-label">Status:</span>
+                  <span className="vuln-value vulnerable-text">Vulnerable</span>
+                </div>
+                <div className="vuln-info-row">
+                  <span className="vuln-label">Findings:</span>
+                  <span className="vuln-value">{vulnerabilities.broken_authentication.findings_count} vulnerabilities</span>
+                </div>
+                
+                {/* Show findings details */}
+                  <div className="findings-section">
+                  {cookies.map((cookie, index) => (
+                    <div key={index} className="finding-detail">
+                      <p><strong>Finding #{index + 1}:</strong> Cookies</p>
+                      <p><strong>Vulnerability:</strong> {cookie}</p>
+                    </div>
+                    ))}
+                  </div>
+              </>
+            ) : (
+              <div className="vuln-info-row">
+                <span className="vuln-label">Status:</span>
+                <span className="vuln-value safe-text">No vulnerabilities detected</span>
+              </div>
+            )}
+          </div>
+        </div>
+
       </div>
     </div>
   );

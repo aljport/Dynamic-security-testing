@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from .tests.xss import scan_xss
 from .tests.sql_injection import scan_sql_injection
+from .tests.openDirs import checkOpenDirs
+from .tests.brokenAuth import checkAuth
 import re
 
 @api_view(['POST'])
@@ -43,7 +45,11 @@ def scan_url(request):
         
         print("Running SQL Injection Scan")
         sql_results = scan_sql_injection(url)
-        print("SQL Injection Scan Complete")             
+        print("SQL Injection Scan Complete")  
+
+        print("Running Broken Authentication Scan")
+        auth_results = checkAuth(url)
+        print("Broken Authentication Scan Complete")            
         
         threats_found = 0
         threat_categories = []
@@ -55,6 +61,10 @@ def scan_url(request):
         if sql_results.get('vulnerable'):
             threats_found += 1
             threat_categories.append('SQL Injection')
+
+        if auth_results.get('vulnerable'):
+            threats_found += 1
+            threat_categories.append('Broken Authentication')
         
         is_safe = threats_found == 0
         
@@ -75,7 +85,8 @@ def scan_url(request):
             },
             'vulnerabilities': {
                 'xss': xss_results,
-                'sql_injection': sql_results
+                'sql_injection': sql_results,
+                'broken_authentication': auth_results
             }
         }
         
