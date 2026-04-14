@@ -30,7 +30,7 @@ def scan_url(request):
             r'localhost|'  # localhost
             r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # or IP
             r'(?::\d+)?'  # optional port
-            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+            r'(?:/.*)?$', re.IGNORECASE)
         
         if not url_pattern.match(url):
             return Response(

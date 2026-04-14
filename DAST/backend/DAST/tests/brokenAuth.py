@@ -14,8 +14,7 @@ def checkCookies(url):
                 results.append("Vulnerability: " + cookie.name + "does not have secure flag")
             if not httpOnly:
                 results.append("Vulnerability: " + cookie.name + " does not have the HttpOnly attribute")
-        if security and httpOnly:
-            results.append("Cookies are secure and have HttpOnly flags")
+    
     return results
 
 # code403 = "unauthorized"
@@ -26,6 +25,7 @@ def checkCookies(url):
 def checkRateLimit(url):
     session = requests.Session()
 
+    results = []
     # Login attempt
     payload = {
         "username": "test",
@@ -35,17 +35,19 @@ def checkRateLimit(url):
     for i in range(11):
         login_response = session.post(url, data=payload)
         if login_response.status_code != 403 and i < 11:
-            return "Successful login timeout (within 10 attempts)."
-        time.sleep(4)
+            print(login_response.status_code)
+            return []
     else:
-        return "Vulnerability: No login timeout within 10 attempts."
+        results.append("No login timeout within 10 attempts.")
+
+    return results
 
 
 def checkAuth(url):
     vulnerable = False
     count = 0
     resultsCookies = checkCookies(url)
-    resultLimit = checkRateLimit(url)
+    resultsLimit = checkRateLimit(url)
 
     for i in range(len(resultsCookies)):
         if resultsCookies[i][0] == "V":
@@ -53,14 +55,14 @@ def checkAuth(url):
     if vulnerable:
         count += 1
     
-    if resultLimit[0] == "V":
+    if resultsLimit:
         vulnerable = True
         count += 1
 
     return  {
         "vulnerable": vulnerable,
         "cookies": resultsCookies,
-        "limit": resultLimit,
+        "limits": resultsLimit,
         "findings_count": count
     }
 
