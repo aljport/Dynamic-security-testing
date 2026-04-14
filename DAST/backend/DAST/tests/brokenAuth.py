@@ -1,5 +1,17 @@
-import time
 import requests
+import time
+
+def checkCookies(url):
+    r = requests.get(url)
+    for cookie in r.cookies:
+        security = cookie.secure
+        httpOnly = cookie.has_nonstandard_attr('HttpOnly')
+        if not security:
+            print("Vulnerability: " + cookie.name + "")
+        if not httpOnly:
+            print("Vulnerability: " + cookie.name + " does not have the HttpOnly attribute")
+        if (security and httpOnly):
+            print("Cookies are secure and have HttpOnly flags")
 
 # code403 = "unauthorized"
 # If timeout occurs another code will be returned
@@ -23,3 +35,4 @@ def checkRateLimit(url):
         time.sleep(4)
     else:
         print("Vulnerability: No login timeout within 10 attempts.")
+
