@@ -5,12 +5,14 @@ from ddgs import DDGS
 
 
 def checkOpenDirs(url):
-    query = 'site:archive.apache.org "Index of"'
+    query = f'site:{url} "Index of"'
 
     with DDGS() as ddgs:
         results = ddgs.text(query, max_results=10)
-
+        links = []
         for r in results:
-            print(r["title"])
-            print(r["href"])
-            print()
+            links.append(r["href"])
+        return {
+            "vulnerable": True,
+            "links": links
+        }
