@@ -1,5 +1,14 @@
 import requests
-r = requests.get("https://example.com")
 
-for cookie in r.cookies:
-    print(cookie.name, cookie.secure, cookie.has_nonstandard_attr('HttpOnly'))
+
+def checkCookies(url):
+    r = requests.get(url)
+    for cookie in r.cookies:
+        security = cookie.secure
+        httpOnly = cookie.has_nonstandard_attr('HttpOnly')
+        if not security:
+            print("Vulnerability: " + cookie.name + "")
+        if not httpOnly:
+            print("Vulnerability: " + cookie.name + " does not have the HttpOnly attribute")
+        if (security and httpOnly):
+            print("Cookies are secure and have HttpOnly flags")
